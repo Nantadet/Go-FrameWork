@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"strconv"
+	"strings"
 
 	"github.com/Nantadet/go-fiber-test/model"
 	"github.com/gofiber/fiber/v3"
@@ -95,4 +96,46 @@ func (h productHandler) DeleteProductByID(c fiber.Ctx) error {
 	}
 	return c.JSON("delated")
 
+}
+
+func (h *productHandler) UpdateProductByID(c fiber.Ctx) error {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil || id <= 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "invalit request body.",
+		})
+	}
+	var req model.Product
+	if err := c.Bind().Body(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalit request body",
+		})
+	}
+	req.Name = strings.TrimSpace(req.Name)
+	Pric := req.Price
+	if req.Name == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "request Name",
+		})
+	}
+	var products model.Product
+	if err := h.db.First(&products, id).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"message": "Product not found",
+			})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Error fetching school",
+		})
+	}
+	products.Name = req.Name
+	products.Price = Pric
+
+	if err := h.db.Save(&products).Error; err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Error updating schools",
+		})
+	}
+	return c.Status(fiber.StatusOK).JSON(products)
 }

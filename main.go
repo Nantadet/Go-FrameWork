@@ -39,7 +39,7 @@ func main() {
 	fmt.Println("connect success", db != nil)
 
 	app := fiber.New(fiber.Config{
-		AppName: "HLLC 2026 - Backend Test",
+		AppName: "NANTADET LEARN-GO",
 	})
 
 	app.Use(logger.New())
@@ -47,6 +47,7 @@ func main() {
 	app.Use("/", static.New("./public"))
 	routes.SetupRoutes(app, db)
 
+	log.Fatal(app.Listen(":3000"))
 	log.Println(`
 		🚀 NANTADET DEV SERVER
 
@@ -56,5 +57,4 @@ func main() {
         │ Mode   : Development        │
         │ Ready  : ✔                  │
 		  Server starting on :8080`)
-	log.Fatal(app.Listen(":3000"))
 }
