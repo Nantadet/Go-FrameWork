@@ -1,0 +1,15 @@
+{
+    "watch": [
+        "main.go",
+        "handler",
+        "model",
+        "routes",
+        "public"
+    ],
+    "ext": "go,html,css,js,json",
+    "ignore": [
+        "node_modules",
+        ".git"
+    ],
+    "exec": "powershell -ExecutionPolicy Bypass -File scripts/nodemon-go.ps1"
+}

@@ -1,0 +1,12 @@
+{
+    "name": "go-fiber-test",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "dev": "nodemon --config nodemon.json",
+        "dev:go": "powershell -ExecutionPolicy Bypass -File scripts/nodemon-go.ps1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.10"
+    }
+}
