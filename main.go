@@ -35,7 +35,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to connect database: %v", err)
 	}
-	db.AutoMigrate(&model.Product{})
+	db.AutoMigrate(&model.User{})
+	db.AutoMigrate(&model.Ohlcv{})
+	db.AutoMigrate(&model.Order{})
 	fmt.Println("connect success", db != nil)
 
 	app := fiber.New(fiber.Config{
