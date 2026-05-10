@@ -19,7 +19,7 @@ func NewSchoolHandler(db *gorm.DB) *productHandler {
 }
 
 func (h *productHandler) GetProducts(c fiber.Ctx) error {
-	var products []model.Product
+	var products []model.Prodduct
 	if err := h.db.Find(&products).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": "failed to fetch products",
@@ -32,7 +32,7 @@ func (h *productHandler) GetProducts(c fiber.Ctx) error {
 
 func (h *productHandler) CreateProduct(c fiber.Ctx) error {
 
-	var product model.Product
+	var product model.Prodduct
 
 	if err := c.Bind().Body(&product); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -59,7 +59,7 @@ func (h *productHandler) GetProduct(c fiber.Ctx) error {
 		})
 	}
 
-	var product model.Product
+	var product model.Prodduct
 	if err := h.db.First(&product, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -82,7 +82,7 @@ func (h productHandler) DeleteProductByID(c fiber.Ctx) error {
 			"error": "invalid request body",
 		})
 	}
-	var product []model.Product
+	var product []model.Prodduct
 	if err := h.db.Delete(&product, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -105,20 +105,20 @@ func (h *productHandler) UpdateProductByID(c fiber.Ctx) error {
 			"error": "invalit request body.",
 		})
 	}
-	var req model.Product
+	var req model.Prodduct
 	if err := c.Bind().Body(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Invalit request body",
 		})
 	}
 	req.Name = strings.TrimSpace(req.Name)
-	Pric := req.Price
+	Price := req.Price
 	if req.Name == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "request Name",
 		})
 	}
-	var products model.Product
+	var products model.Prodduct
 	if err := h.db.First(&products, id).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -130,7 +130,7 @@ func (h *productHandler) UpdateProductByID(c fiber.Ctx) error {
 		})
 	}
 	products.Name = req.Name
-	products.Price = Pric
+	products.Price = Price
 
 	if err := h.db.Save(&products).Error; err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
